@@ -1,0 +1,22 @@
+version: "3"
+
+services: 
+  hello:
+    image: 316019700692.dkr.ecr.us-east-1.amazonaws.com/bitwala-hello-py:03
+    volumes: 
+      - ./log/:/var/log/
+    networks:
+      - net
+
+  nginx:
+    image: nginx:stable-perl
+    volumes: 
+      - ./configuration/nginx/:/etc/nginx/conf.d/
+      - ./certificate/:/certificate/
+    ports: 
+      - 80:5000
+    networks:
+      - net
+
+networks:
+  net:

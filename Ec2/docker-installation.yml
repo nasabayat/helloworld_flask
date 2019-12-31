@@ -1,0 +1,106 @@
+---
+- hosts: aws
+  remote_user: ubuntu
+  become: yes
+  gather_facts: no
+
+  vars:
+    git_version: develop    # branch which you're going to clone
+    user: ubuntu            # remote_user
+    src_user: naser         # user on machine which is running the ansible-playbook and data saved on it.
+    repo_dest: "/home/{{ user }}/github.com/src/HelloWorld"
+
+  tasks:
+    # # Timezone 
+    # - name: Set timezone to Etc/UTC
+    #   timezone:
+    #     name: Etc/UTC
+
+    # Docker installation
+    # - name: Install docker      
+    #   apt:
+    #     name: "{{ item }}"
+    #     state: present
+    #     update_cache: yes
+    #   with_items:
+    #     - apt-transport-https
+    #     - ca-certificates
+    #     - curl
+    #     - gnupg-agent
+    #     - software-properties-common
+    
+    # - name: Add Docker’s official GPG key
+    #   shell: 
+    #     cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+    # - name: set up the stable repository
+    #   shell:
+    #     cmd: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+    # - name: install the latest version of Docker Engine - Community and containerd
+    #   apt:
+    #     name: "{{ item }}"
+    #     state: present
+    #     update_cache: yes
+    #   with_items:
+    #     - docker-ce
+    #     - docker-ce-cli
+    #     - containerd.io
+    
+    # # docker-compose installation
+    # - name: Download the current stable release of Docker Compose
+    #   shell: 
+    #     cmd: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    # - name: Apply executable permissions to the binary
+    #   file: 
+    #     path: /usr/local/bin/docker-compose
+    #     mode: '755'
+
+    # - name: Add user to docker group
+    #   user:
+    #     name: "{{ user }}"
+    #     append: yes
+    #     groups: docker
+
+    # Github repository
+    # - name: Create dest direcoty
+    #   file:
+    #     path: "{{ repo_dest }}"
+    #     state: directory
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #     mode: '764'
+
+    # - name: Copy id_rsa and id_rsa.pub 
+    #   copy:
+    #     src: "/home/{{ src_user }}/aws_git/{{ item }}"
+    #     dest: "/home/{{ user }}/.ssh"
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #     mode: '600'
+    #   with_items:
+    #     - id_rsa
+    #     - id_rsa.pub
+
+    # - name: Clone the repository
+    #   git:
+    #     #repo: git@github.com:nasabayat/Bitwala.git
+    #     repo: 'https://github.com/nasabayat/Bitwala.git'
+    #     dest: "{{ repo_dest }}"
+    #     clone: yes
+    #     version: "{{ git_version }}"
+    
+    # Deployment of docker-compose
+    # - name: Log into ECR
+    #   docker_login:
+    #     registry_url: https://316019700692.dkr.ecr.us-east-1.amazonaws.com
+    #     username: AWS
+    #     password: eyJwYXlsb2FkIjoiYXVXOHluY3FscGhCN1YwUStsN2RQbERzQkFXUGJqT2d1WTdRaFZoRmtXNXFDWHJZRUtUZ1ZZRDlVUEN0bmw5MFMvdkNYOFZkY1R5MTVXU0pDclpUVE1LZGxweEhoUWZlcEdxbXgwc1hwQlNjdEtZeEZsZkx1SzRPUXQ0UE9wV0xkZE1xdmdYTmVDMS9CcUtObjVZdEFxelpocTlBUGpxSkYyK2tuU3FwWTVsQ3pCK0k3b05rRzdtMHRJMkJ4Z3BudlZ6WE9VUmcwdXA0aWpVK0xNa1FBUkRGRkwwSlRuaWI5Qy91cnh1TiszcUs5T1N5SElQOXJzYWIyaTlFQzdOcENMckpLeFZDbGZRd1pqZytwV25yQkZ1ZFNXa3FYaHVFNGJRZXBFSDdrVWlyR25lbDZOdFB5TlJ1SkhrRWl6ckpzRDFVdTNrQm5aMFl2VmpNb0xzR2Nma3BFdDR3eGwvVStjWWFGbi90TmQ4ai9zWXdybVFEUEMzVmdFRzVhWVpNOG8yM1JBVFM2b2FaZE1QOHZYWC9QUW9FYUh4L2JxbSt1eThHWWUyRXoyemVPTUw4bmV3QUlLNE9XUlk5dktnRnJxMStmalNQUG1kMWFOYmZFMEg5bGxxRzJVcmZiWUZsMnNRNFZFTHJTelQzWG5GY2tjbVhOdW1ORWxLZ0MrcG81aDF6T3ZMdTNzOStOM2ZiTjBFdTRET3hIaUw4OW44amdyZldlQ0JmRUJ0bzZhd0xJa2E3ZHl0Y1hWdkV0Nkk5SEZGRzd6clpPVVBId0llTmZpWXVGb0JSMzhMdzZ5bm5MaTRIaUorU2dNYzNKQzdKZld6enhvM0o4QnB1L21ETmFpVDNvczNrYjhxTGpWNGhRcC9GYW5ZYWhjcDhoY2VkUlFWMWNNZVU5aTBGUFp4UHJadTVGbmcxY1A0UXgxR0Z4bFJNV3RSMkMxc0Nqdmo0Zi9UTUxwVVJiMkpjU3VsVmFGeGdjd3NLTjJiZnpHNHhkSzhlaW4vZy95ZVRUSWZGV3FyVWQ4QU1NVnRoUDNSZ0txU3hxdHlwTnN1QUxpTER6MWEzbE1KekxyQVI3N05GSFdUTjAxeitxcXdjckxpNXRtR3JpWHZjUWJBTGJ4NmdqNFlWcmY3bithUzlNOHV2NTE0MEFEUVRxaUdGZElKcWdNSTFXeGs5YUFWVzlLWnp3QUFESmZ2UjJnUFFhNmNER29sblkxb2JnZTY4R1BRaXYrR0tKeHc4RXRpSVhpMTdacDJ4RjQ0QXJ2SEQra3NjVmhPZHdFREkzWmpodGhnR3VJbkJOQTJKM3ZOMEVJSitHOG41VlFyaHc2bEozVTQwS2tuOXJWbmxDNk9FcTN5aVhHVm1saXZxQ3pMZE9lQ3l4TkxhT3dLNS9sTlVOajV2Vyszd0lXeWxpa1JJNEFMSW5zVT0iLCJkYXRha2V5IjoiQVFFQkFIaHdtMFlhSVNKZVJ0Sm01bjFHNnVxZWVrWHVvWFhQZTVVRmNlOVJxOC8xNHdBQUFINHdmQVlKS29aSWh2Y05BUWNHb0c4d2JRSUJBREJvQmdrcWhraUc5dzBCQndFd0hnWUpZSVpJQVdVREJBRXVNQkVFREQyS3ZDNGxPYVp2ditFeTBBSUJFSUE3dHNFb2poYTBCRUVGS3IyS0VOMWU1UTRZSGtrR0piSEpYaTBaTDRjeEVDVEo3UzhYZCs1SDFiOVpubUk4cG9naHYzU1FDUnFhN09ZMDBERT0iLCJ2ZXJzaW9uIjoiMiIsInR5cGUiOiJEQVRBX0tFWSIsImV4cGlyYXRpb24iOjE1Nzc0NDY0OTV9
+
+    # - name: Log into ECR
+    #   shell: 
+    #     cmd: docker login -u AWS -p eyJwYXlsb2FkIjoiSlFUVXFZVHhBaWpBZmE0azJyc1JocE1zMzRleFh0OHFqU2VWMTFXZ3k4MFJocmVLdDlTNHBtSXZPRHdEc2swTFZXbjQ1alkwRCsrdDlQN3JQMmZpbUM0bTg2SHJ1anR1QjU3OUJ4ZHdoVkpiMWRhUmFwbDY0b0svekNDa0VOQit3YkVKa1FiZnBKdUUwRDZobll5RXN6alZ2eGlMdjF3RTJ3SHFGaTl5UTEzTXh1Rm81NmJFeFJheWpJczY3U3c2RHBzd1lxKzNiNUtzeHMraXJQbTBJemtheWtybytmaDI1ZkhtaWFUTm52dC91bmIraDZXWDZGbFBYSWJWcWhXWit2THp5ZXhDM3A3cUhHTzI5V2pXU0hzcE8yTGNUWXNDMzh5V1kza1lsN1NlQ0M0b0VLWlN0b25BR0Zyc2ZnUmxiSmlocVE3c0RvM0NEa1E4a05TTUczdE9JRlJsNzBwR0k4UjIycjhoKzRrM004RmxrTEsxZC9rWTk0aStPdktxaVNyTmFGeUJyM00ydWtBSjZmQ0FFcnBaVUV2MGpKUVdlTDdxbzBIdTRncHdzVjFybzBLUG1QcXA0SndrTzI5SVhFOTVaNWt0ZHFkTzAycE0veU1jZ1FLVXlxeFVJV0tsZmo2cmI4ZCtGT1NkdTFuQUw2cVUvU1VEeE0rZHEyZWlrRHQxK2RFTHNkSC9DdjlhdHVkVEluYlJPd2ZoemVscldoejRGMXpycGJwZFRzTDBMTmtoZ1B5Q1BJdWpBWEFJWGszN3UrQVA2Nll6cHpLRExjS0hOQzZ1bEJxVEg3MjFYVkJRTkw3bkN1UHBPeVlkU1JiK0RkbzhYSm1uRzFFVUVqRjc4akVUcUF6aVJrQ3NONFlVcDJwL1Z4RXgrbTIrR28yTTA5WVpJaWlwMXlvOUZQN2kzMDR6VEhiclBwRE80YkRpSVlKWEZCNzFxSDVTOGN3OVVoN0hVQ09oK2d3MHo0Vk45ejhaMU1CZWZ1SmVMSjdXUnNMVXV0L0djcHIxQkY5cjk1R3N4NlI2TDhlbmFSUTV2Wkl0YmIyc3JZRHZaODc3QXBsYWMwbGxQRzhSYU5JaG5TUHZyR09KWFVHZ3l1SDJ6MW02MG1uc29Bem9ZTGh1eU1ISWJBem5FaWpXemNHWFpIcmhjLzVnZVFjalhIOVNLYWxCMGVsWUpCWWVHcDNIM3dXWWtEM2VLS0c4TURiUVJpcVA3Y0hURTZMQU5KMTBOaEovcnNaYlRFbGxjaHpVcnR2S1YwaTVCaDhaNnBISDJaVGxMV3dIWTB3WGVXdkY3aEZMWGZ1cVBpV2p4RlhXUUJxbVhKTmpjbHdZYWpDMUMweXB0OU9hUU5BYnU3b1ErQkFHa3JQaXZZc2ZOZ1ZhSGJUSld6OVhkWUZlTTNwNWY1MG9jMWtsZEVqMnVvWT0iLCJkYXRha2V5IjoiQVFFQkFIaHdtMFlhSVNKZVJ0Sm01bjFHNnVxZWVrWHVvWFhQZTVVRmNlOVJxOC8xNHdBQUFINHdmQVlKS29aSWh2Y05BUWNHb0c4d2JRSUJBREJvQmdrcWhraUc5dzBCQndFd0hnWUpZSVpJQVdVREJBRXVNQkVFRERrbkJKT3B3ZU9sTENmOElRSUJFSUE3T0dCb0owaExhYVgyenkrU0J6cDVSb1dLSHFFWTMvL1V5cEVFOU53L0Urd2JFNFUrTCt5MkFpNkphMmJnTDhpNzBlSWRPcWEyMm5NTGVUaz0iLCJ2ZXJzaW9uIjoiMiIsInR5cGUiOiJEQVRBX0tFWSIsImV4cGlyYXRpb24iOjE1Nzc0NTAwMDJ9 https://316019700692.dkr.ecr.us-east-1.amazonaws.com
+
+    - name: Gather information about all instances
+      ec2_instance_info:

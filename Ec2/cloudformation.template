@@ -1,0 +1,25 @@
+Parameters:
+  SecurityGroupIds:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: An array of security group IDs, such as sg-a123fd85, sg-b456fd85. 
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: An Amazon EC2 key pair name.
+  InstanceType:
+    Type: String
+    Default: t2.micro
+  Image:
+    Type: String
+    Description: Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-04b9e92b5572fa0d1 (64-bit x86)
+  ServerName:
+    Type: String
+    Description: server name
+
+Resources:
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref Image
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds: !Ref SecurityGroupIds

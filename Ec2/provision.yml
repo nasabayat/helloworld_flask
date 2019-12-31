@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Provision Ec2
+      cloudformation:
+        stack_name: 'BitwalaStack'
+        state: present
+        region: us-east-1
+        disable_rollback: true
+        template: cloudformation.template
+        template_parameters:
+          KeyName: "KeyPair3"
+          SecurityGroupIds: sg-1a9a615c
+          InstanceType: t2.micro
+          Image: ami-04b9e92b5572fa0d1 
+          ServerName: 'Bitwala'
